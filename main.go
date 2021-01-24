@@ -1,7 +1,7 @@
 package main
 
 import (
-	"docktor/docktor"
+	"docktor/lib"
 	"docktor/tui"
 	ui "github.com/gizak/termui/v3"
 	"image"
@@ -10,14 +10,14 @@ import (
 	"time"
 )
 
-var dm *docktor.DockerManager
+var dm *lib.DockerManager
 var dashboard *tui.Dashboard
 
 func initDocktor() {
 	width, height := ui.TerminalDimensions()
 	log.Printf("Termsize: %d %d\n", width, height)
 
-	dm = docktor.NewDockerManager()
+	dm = lib.NewDockerManager()
 	dashboard = tui.NewDashboard(image.Rectangle{
 		Min: image.Point{},
 		Max: image.Point{X: width, Y: height},
@@ -28,10 +28,10 @@ func initDocktor() {
 		for _ = range time.NewTicker(dm.UpdateInterval).C {
 
 			switch dm.Type {
-			case docktor.T_CONTAINERS:
+			case lib.T_CONTAINERS:
 				dashboard.ParseContainers(dm.GetContainerList())
 				break
-			case docktor.T_IMAGES:
+			case lib.T_IMAGES:
 				dashboard.ParseImages(dm.GetImageList())
 				break
 			}
